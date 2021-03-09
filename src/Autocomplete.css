@@ -1,0 +1,36 @@
+.Autocomplete-box {
+  display: flex;
+  position: relative;
+  flex: 1;
+}
+
+.Autocomplete-input {
+  background-color: #073642;
+  color: #839496;
+  border: 2px solid #073642;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.Autocomplete-input:focus {
+  outline: 2px solid #586e75;
+}
+
+ul.Autocomplete-options {
+  position:absolute;
+  top: 100%;
+  width: max-content;
+  margin-top: 5px;
+  margin-bottom: 0;
+  padding-inline-start: 0;
+}
+
+li.option {
+  display: block;
+  text-align: left;
+}
+
+li.active {
+  background-color: #073642;
+  color: #268bd2;
+}
