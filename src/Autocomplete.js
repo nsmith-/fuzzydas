@@ -7,13 +7,15 @@ class Autocomplete extends Component {
   static propTypes = {
     options: PropTypes.instanceOf(Array),
     default: PropTypes.string,
-    name: PropTypes.string
+    name: PropTypes.string,
+    maxDisplayItems: PropTypes.number
   };
   
   static defaultProps = {
     options: [],
     default: "",
-    name: "menu"
+    name: "menu",
+    maxDisplayItems: 100
   };
   
   constructor(props) {
@@ -37,7 +39,7 @@ class Autocomplete extends Component {
   
   refreshOptions(userInput) {
     const filteredOptions = this.props.options.filter(
-      (option) => fuzzysearch(userInput, option)
+      (option) => fuzzysearch(userInput.toLowerCase(), option.toLowerCase())
     );
     this.setState({
       activeOption: 0,
@@ -77,7 +79,7 @@ class Autocomplete extends Component {
       this.setState({
         showOptions: false
       });
-    }, 500);
+    }, 500); // FIXME dumb timeout
   };
 
   handleDivFocus(e) {
@@ -94,21 +96,23 @@ class Autocomplete extends Component {
   
     if (this.state.showOptions) {
       if (this.state.filteredOptions.length) {
+        const buildList = options => options.reduce((out, option, index) => {
+          if ( index < this.props.maxDisplayItems ) {
+            let className = "option";
+            if (index === this.state.activeOption) {
+              className += " active";
+            }
+            out.push(
+              <li className={className} key={option} onClick={this.handleListClick}>
+                {option}
+              </li>
+            );
+          }
+          return out;
+        }, []);
         optionsListComponent = (
           <ul className="Autocomplete-options" key={this.name}>
-            {this.state.filteredOptions.map((option, index) => {
-              let className = "option";
-  
-              if (index === this.state.activeOption) {
-                className = "option active";
-              }
-  
-              return (
-                <li className={className} key={option} onClick={this.handleListClick}>
-                  {option}
-                </li>
-              );
-            })}
+            {buildList(this.state.filteredOptions)}
           </ul>
         );
       } else {
