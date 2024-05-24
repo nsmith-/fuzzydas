@@ -107,6 +107,10 @@ class Autocomplete extends Component {
                 {option}
               </li>
             );
+          } else if ( index === this.props.maxDisplayItems ) {
+            out.push(
+              <li className="option"><i>... ({options.length - index} more)</i></li>
+            );
           }
           return out;
         }, []);
